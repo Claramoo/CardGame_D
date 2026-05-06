@@ -1,3 +1,3 @@
 public interface DealsDamage {
-    public void doDamage(Player playerToDamage, int damageAmount);
+    public void doDamage(Player currentPlayer, Player playerToDamage);
 }

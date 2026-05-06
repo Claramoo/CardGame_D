@@ -1,10 +1,11 @@
+import java.util.ArrayList;
+
 public class PointCard extends Card {
 
     public PointCard() {
-
-        // Attack card settings
-        int minPoints = 4;
-        int maxPoints = 7;
+        // Point card settings
+        int minPoints = 6;
+        int maxPoints = 10;
 
         int pointValue = Rand.randomInt(minPoints, maxPoints + 1);
 
@@ -12,7 +13,15 @@ public class PointCard extends Card {
     }
 
     @Override
-    public void play(Player currentPlayer) {
+    public void play(Player currentPlayer, ArrayList<Player> allPlayers) {
+        currentPlayer.addPoints(super.getPointValue());
 
+        System.out.println(currentPlayer.getName() + " played " + this);
+        System.out.println(currentPlayer.getName() + " now has " + currentPlayer.getNumPoints() + " points.");
+    }
+
+    @Override
+    public String toString() {
+        return "Point Card { point value: " + super.getPointValue() + "}";
     }
 }
