@@ -2,6 +2,7 @@ import java.util.ArrayList;
 
 public class FreezeCard extends Card implements DealsDamage, AppliesFreeze {
     private int damage; // amount of points subtracted from the target
+    private int initialFreezeTimer;
 
     public FreezeCard() {
 
@@ -9,6 +10,7 @@ public class FreezeCard extends Card implements DealsDamage, AppliesFreeze {
         int minDamage = 4;
         int maxDamage = 6;
         this.damage = Rand.randomInt(minDamage, maxDamage + 1);
+        initialFreezeTimer = 1;
 
         // Points gained from playing this card
         int minPoints = 1;
@@ -49,7 +51,7 @@ public class FreezeCard extends Card implements DealsDamage, AppliesFreeze {
 
     @Override
     public void freeze(Player currentPlayer, Player playerToFreeze) {
-        playerToFreeze.freeze();
+        playerToFreeze.freeze(initialFreezeTimer);
         System.out.println(currentPlayer.getName() + " froze " + playerToFreeze.getName() + "!");
     }
 

@@ -5,6 +5,7 @@ public class Player {
     private ArrayList<Card> hand;
     private int numPoints;
     private boolean isFrozen;
+    private int frozenTime;
 
     public Player(String name) {
         this.name = name;
@@ -45,27 +46,34 @@ public class Player {
     }
 
     public boolean hasCardsInHand() {
-        return hand.size() > 0;
+        return !hand.isEmpty();
     }
 
     public void addCardToHand(Card card) {
         hand.add(card);
     }
 
+
     public boolean isFrozen() {
         return isFrozen;
     }
 
-    public void freeze() {
+    public void freeze(int freezeTimer) {
+        if (frozenTime <= 0) {
+            this.frozenTime = freezeTimer;
+        }
         isFrozen = true;
     }
 
     public void unfreeze() {
-        isFrozen = false;
+        frozenTime -= 1;
+        if (frozenTime <= 0) {
+            isFrozen = false;
+        }
     }
 
     public Card removeRandomCard() {
-        if (hand.size() == 0) {
+        if (hand.isEmpty()) {
             return null; // returning null indicates there are no cards to remove
         }
 

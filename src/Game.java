@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Game {
 
@@ -6,6 +7,7 @@ public class Game {
 
     // Player settings
     private int startingHandSize;
+    private int numOfPlayers;
 
     private float playerChancesOfPlayingCard; // % chance (0-1) that a player plays a card from their hand
     private float playerChancesOfDrawingFromMixedDeck; // % chance (0-1) that a player draws from the mixed deck
@@ -32,36 +34,110 @@ public class Game {
     // ------ End of Game Objects ----- //
 
 
-
     public Game() {
-        // Set game settings
-        setGameSettings();
-
         // Game objects
         players = new ArrayList<Player>();
         mixedDeck = new ArrayList<Card>();
         damageDeck = new ArrayList<DealsDamage>();
 
+        // Set game settings
+        setGameSettings();
+
         // Generate the decks
         generateDecks();
+
     }
+
+    // Initializes the settings fields.
+    private void setGameSettings() {
+        // Player settings
+        startingHandSize = 3;
+        playerChancesOfPlayingCard = 0.5f; // 50% play card, 25% draw card from mixed, 25% draw card from damage deck and play immediately
+        playerChancesOfDrawingFromMixedDeck = 0.25f;
+
+        // Deck settings
+        totalNumberOfCards = 20;
+        chancesOfDamageCardBeingInDamageDeck = 0.4f;
+
+        pointCardChances = 0.5f; // must be between 0 and 1
+        attackCardChances = 0.25f; // must be between 0 and 1
+        freezeCardChances = 0.15f; // must be between 0 and 1
+
+    } // void setGameSettings()
+
+
+    // Populates the two ArrayLists with random Cards, according to the settings.
+    private void generateDecks() {
+        float randomValue;
+        for (int i = 0; i < totalNumberOfCards; i++) {
+
+            randomValue = Rand.random(); // 0.0 -> 0.999...
+
+            // % chance of creating a point card
+            if (randomValue < pointCardChances) {
+                mixedDeck.add(new PointCard());
+            }
+
+            // % chance of creating an attack card
+            else if (randomValue < pointCardChances + attackCardChances) {
+                if (Rand.random() < chancesOfDamageCardBeingInDamageDeck) {
+                    damageDeck.add(new AttackCard());
+                } else {
+                    mixedDeck.add(new AttackCard());
+                }
+            }
+
+            // % chance of creating a freeze card
+            else if (randomValue < pointCardChances + attackCardChances + freezeCardChances) {
+
+                if (Rand.random() < chancesOfDamageCardBeingInDamageDeck) {
+                    damageDeck.add(new FreezeCard());
+                } else {
+                    mixedDeck.add(new FreezeCard());
+                }
+            }
+
+            // % chance of creating a thief card
+            else {
+                mixedDeck.add(new ThiefCard());
+            }
+
+        } // for (i < totalNumberOfCards; i++)
+
+        Collections.shuffle(mixedDeck);
+        Collections.shuffle(damageDeck);
+    } // void generateDecks()
+
+
+    public void errorDetections() {
+
+        if (1f < playerChancesOfPlayingCard + playerChancesOfDrawingFromMixedDeck) {
+            System.out.println("ERROR: Chances of different player actions are not all positive.");
+        }
+
+        // thief card chances should be positive based on the math, but check just to be safe
+        if (1f < pointCardChances + attackCardChances + freezeCardChances) {
+            System.out.println("ERROR: Card chances are not all positive.");
+        }
+
+        if (totalNumberOfCards < startingHandSize * (players.size() + 1)) {
+            System.out.println("WARNING: NOT ENOUGH CARDS FOR RECOMMENDED PLAY. ");
+        }
+    }
+
 
     public void registerPlayer(Player player) {
         players.add(player);
     }
 
     public void run() {
+        errorDetections();
 
         // deal cards to each player
-        int cardsAdded = 0;
-        while (cardsAdded < startingHandSize) {
-            for (int i = 0; i < players.size(); i++) {
-                int randomCardIndex = Rand.randomInt(0, mixedDeck.size());
-                Card randomCard = mixedDeck.get(randomCardIndex);
-                mixedDeck.remove(randomCardIndex);
-                players.get(i).addCardToHand(randomCard);
+        for (Player player : players) {
+            for (int i=0; i < startingHandSize;i++) {
+                player.addCardToHand(drawCard(mixedDeck));
             }
-            cardsAdded += 1;
         }
 
         int currentPlayerIndex = -1; // will increase to 0 when the loop starts
@@ -69,11 +145,11 @@ public class Game {
 
         // game loop -- loop as long as either deck has cards
 
-        while (mixedDeck.size() > 0 || damageDeck.size() > 0) {
+        while (!mixedDeck.isEmpty() || !damageDeck.isEmpty()) {
 
             // switch to next player
             currentPlayerIndex += 1;
-            if (currentPlayerIndex >= players.size()) {
+            if (currentPlayerIndex >= players.size()){
                 currentPlayerIndex = 0;
             }
             currentPlayer = players.get(currentPlayerIndex);
@@ -101,9 +177,8 @@ public class Game {
             }
 
             // 2. OR draw a card from mixed deck (but don't play it yet)
-            else if (damageDeck.size() == 0 || (mixedDeck.size() > 0 && randomValue < playerChancesOfPlayingCard + playerChancesOfDrawingFromMixedDeck)) {
-                Object drawnObject = drawRandomCard(mixedDeck);
-                Card drawnCard = (Card)drawnObject;
+            else if (damageDeck.isEmpty() || (!mixedDeck.isEmpty() && randomValue < playerChancesOfPlayingCard + playerChancesOfDrawingFromMixedDeck)) {
+                Card drawnCard = drawCard(mixedDeck);
                 currentPlayer.addCardToHand(drawnCard);
 
                 System.out.println(currentPlayer.getName() + " drew a " + drawnCard + " from the Mixed deck.");
@@ -111,26 +186,20 @@ public class Game {
 
             // 3. OR draw a card from damage deck and use its damage effect immediately, without getting points
             else {
-                Object drawnObject = drawRandomCard(damageDeck);
-                DealsDamage damageCard = (DealsDamage)drawnObject;
+                DealsDamage damageCard = (DealsDamage) drawCard(damageDeck);
 
                 System.out.println(currentPlayer.getName() + " drew a " + damageCard + " from the Damage deck.");
 
                 // pick a random player (but not oneself) to apply the damage card to
-                boolean selectedAnotherPlayer = false;
-                Player otherPlayer = null;
-
-                while (!selectedAnotherPlayer) {
-                    int randomPlayerIndex = Rand.randomInt(0, players.size());
-                    otherPlayer = players.get(randomPlayerIndex);
-                    if (otherPlayer != currentPlayer) {
-                        selectedAnotherPlayer = true;
-                    }
-                }
+                Player otherPlayer;
+                do {
+                    otherPlayer = players.get(Rand.randomInt(0, players.size()));
+                } while (otherPlayer == currentPlayer);
 
                 damageCard.doDamage(currentPlayer, otherPlayer);
+
                 if (damageCard instanceof AppliesFreeze) {
-                    AppliesFreeze freezeCard = (AppliesFreeze)damageCard;
+                    AppliesFreeze freezeCard = (AppliesFreeze) damageCard;
                     freezeCard.freeze(currentPlayer, otherPlayer);
                 }
             }
@@ -142,92 +211,16 @@ public class Game {
         declareWinner();
     }
 
-    // Randomly selects a reference (Card or DealsDamage) from an ArrayList (mixedDeck or damageDeck).
-    // Removes the randomly selected reference from the specified ArrayList.
-    // Returns the selected reference as an Object (because we don't know what type the ArrayList stores).
-    private Object drawRandomCard(ArrayList arrayList) {
-        int randomCardIndex = Rand.randomInt(0, arrayList.size());
-        Object randomCard = arrayList.remove(randomCardIndex);
-        return randomCard;
-    }
-
-    // Initializes the settings fields.
-    private void setGameSettings() {
-        // Player settings
-        startingHandSize = 3;
-        playerChancesOfPlayingCard = 0.5f; // 50% play card, 25% draw card from mixed, 25% draw card from damage deck and play immediately
-        playerChancesOfDrawingFromMixedDeck = 0.25f;
-        float playerChancesOfDrawingFromDamageDeck = 1f - (playerChancesOfPlayingCard + playerChancesOfDrawingFromMixedDeck);
-        if (playerChancesOfDrawingFromDamageDeck < 0f) {
-            System.out.println("ERROR: Chances of different player actions are not all positive.");
-        }
-
-
-        // Deck settings
-        totalNumberOfCards = 20;
-        chancesOfDamageCardBeingInDamageDeck = 0.4f;
-
-        pointCardChances = 0.5f; // must be between 0 and 1
-        attackCardChances = 0.25f; // must be between 0 and 1
-        freezeCardChances = 0.15f; // must be between 0 and 1
-
-        // thief card chances should be positive based on the math, but check just to be safe
-        float thiefCardChances = 1f - (pointCardChances + attackCardChances + freezeCardChances);
-        if (thiefCardChances < 0f) {
-            System.out.println("ERROR: Card chances are not all positive.");
-        }
-    }
-
-    // Populates the two ArrayLists with random Cards, according to the settings.
-    private void generateDecks() {
-        for (int i = 0; i < totalNumberOfCards; i++) {
-
-            float randomValue = Rand.random(); // 0.0 -> 0.999...
-
-            // % chance of creating a point card
-            if (randomValue < pointCardChances) {
-                mixedDeck.add(new PointCard());
-            }
-
-            // % chance of creating an attack card
-            else if (randomValue < pointCardChances + attackCardChances) {
-                AttackCard newAttackCard = new AttackCard();
-
-                if (Rand.random() < chancesOfDamageCardBeingInDamageDeck) {
-                    damageDeck.add(newAttackCard);
-                } else {
-                    mixedDeck.add(newAttackCard);
-                }
-            }
-
-            // % chance of creating a freeze card
-            else if (randomValue < pointCardChances + attackCardChances + freezeCardChances) {
-                FreezeCard newFreezeCard = new FreezeCard();
-
-                if (Rand.random() < chancesOfDamageCardBeingInDamageDeck) {
-                    damageDeck.add(newFreezeCard);
-                } else {
-                    mixedDeck.add(newFreezeCard);
-                }
-            }
-
-            // % chance of creating a thief card
-            else {
-                mixedDeck.add(new ThiefCard());
-            }
-        }
-    }
 
     private void declareWinner() {
         int highestScore = 0;
         Player playerWithHighestScore = null;
 
         System.out.println("\nFinal Scoreboard:");
-        for (int i = 0; i < players.size(); i++) {
-            Player p = players.get(i);
+        for (Player p : players) {
             System.out.println(p.getName() + ": " + p.getNumPoints());
 
-            // update highest score tracker
+            // update the highest score tracker
             if (p.getNumPoints() >= highestScore) {
                 highestScore = p.getNumPoints();
                 playerWithHighestScore = p;
@@ -235,5 +228,11 @@ public class Game {
         }
 
         System.out.println("Player '" + playerWithHighestScore.getName() + "' wins!");
+    }
+
+    public Card drawCard(ArrayList deck) {
+        Card card = (Card) deck.getFirst();
+        deck.removeFirst();
+        return card;
     }
 }
