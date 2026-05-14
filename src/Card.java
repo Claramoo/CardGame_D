@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public abstract class Card {
 
-    private int pointValue;
+    private final int pointValue;
 
     public Card(int pointValue) {
         this.pointValue = pointValue;
@@ -13,6 +13,4 @@ public abstract class Card {
     }
 
     public abstract void play(Player currentPlayer, ArrayList<Player> allPlayers);
-
-    public abstract void showAction(Player currentPlayer, Player otherPlayer);
 }

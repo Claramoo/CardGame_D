@@ -1,12 +1,9 @@
 import java.util.ArrayList;
 
-public class ThiefCard extends Card {
+public class CardPlunder extends Card {
 
-    public ThiefCard() {
-        // Thief card settings
-        int pointValue = -1; // costs 1 point to use
-
-        super(pointValue);
+    public CardPlunder() {
+        super(-4);
     }
 
     @Override
@@ -16,24 +13,13 @@ public class ThiefCard extends Card {
         System.out.println(currentPlayer.getName() + " played " + this);
         System.out.println(currentPlayer.getName() + " now has " + currentPlayer.getNumPoints() + " points.");
 
-        // move a card from a target player to a new player
-
         // 1. choose a target player (and not oneself)
         if (allPlayers.size() < 2) {
             System.out.println("Error: No other players for the ThiefCard to steal from.");
             return;
         }
 
-        boolean selectedAnotherPlayer = false;
-        Player otherPlayer = null;
-
-        while (!selectedAnotherPlayer) {
-            int randomPlayerIndex = Rand.randomInt(0, allPlayers.size());
-            otherPlayer = allPlayers.get(randomPlayerIndex);
-            if (otherPlayer != currentPlayer) {
-                selectedAnotherPlayer = true;
-            }
-        }
+        Player otherPlayer = currentPlayer.selectAnotherPlayer(allPlayers);
 
         // 2. remove a random card from that player
         Card removedCard = otherPlayer.removeRandomCard();
@@ -50,6 +36,6 @@ public class ThiefCard extends Card {
 
     @Override
     public String toString() {
-        return "Thief Card { point value: " + super.getPointValue() + "}";
+        return "Plunder Card {gold lost: -4, steals another player's card";
     }
 }

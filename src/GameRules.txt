@@ -18,3 +18,7 @@ Each turn, a Player can choose one of 3 options:
 -- 1. Play a card from their hand
 -- 2. Draw a random card from the Mixed Deck. They do not get to play it.
 -- 3. Draw a random card from the Damage Deck. They must play it immediately, and they do not gain points from playing it, but other Players lose points.
+
+
+
+

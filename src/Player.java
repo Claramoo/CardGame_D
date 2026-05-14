@@ -1,17 +1,16 @@
 import java.util.ArrayList;
 
 public class Player {
-    private String name;
+    private final String name;
     private ArrayList<Card> hand;
     private int numPoints;
-    private boolean isFrozen;
-    private int frozenTime;
+    private boolean isHandicapped;
 
     public Player(String name) {
         this.name = name;
         hand = new ArrayList<Card>();
         numPoints = 5;
-        isFrozen = false;
+        isHandicapped = false;
     }
 
     public void playRandomCardFromHand(ArrayList<Player> players) {
@@ -19,30 +18,6 @@ public class Player {
         int randomCardIndex = Rand.randomInt(0, hand.size());
         Card randomCard = hand.remove(randomCardIndex);
         randomCard.play(this, players);
-
-        // pick a random player (but not oneself) to apply any additional actions to
-        boolean selectedAnotherPlayer = false;
-        Player otherPlayer = null;
-
-        while (!selectedAnotherPlayer) {
-            int randomPlayerIndex = Rand.randomInt(0, players.size());
-            otherPlayer = players.get(randomPlayerIndex);
-            if (otherPlayer != this) {
-                selectedAnotherPlayer = true;
-            }
-        }
-
-        // do possible additional damage action
-        if (randomCard instanceof DealsDamage) {
-            DealsDamage damageCard = (DealsDamage)randomCard;
-            damageCard.doDamage(this, otherPlayer);
-        }
-
-        // do possible additional freeze action
-        if (randomCard instanceof AppliesFreeze) {
-            AppliesFreeze freezeCard = (AppliesFreeze)randomCard;
-            freezeCard.freeze(this, otherPlayer);
-        }
     }
 
     public boolean hasCardsInHand() {
@@ -53,23 +28,16 @@ public class Player {
         hand.add(card);
     }
 
-
-    public boolean isFrozen() {
-        return isFrozen;
+    public boolean isHandicapped() {
+        return isHandicapped;
     }
 
-    public void freeze(int freezeTimer) {
-        if (frozenTime <= 0) {
-            this.frozenTime = freezeTimer;
-        }
-        isFrozen = true;
+    public void freeze() {
+        isHandicapped = true;
     }
 
     public void unfreeze() {
-        frozenTime -= 1;
-        if (frozenTime <= 0) {
-            isFrozen = false;
-        }
+        isHandicapped = false;
     }
 
     public Card removeRandomCard() {
@@ -87,9 +55,6 @@ public class Player {
 
     public void addPoints(int pointsToAdd) {
         numPoints += pointsToAdd;
-        if (numPoints < 0) {
-            numPoints = 0;
-        }
     }
 
     public void removePoints(int pointsToRemove) {
@@ -99,12 +64,21 @@ public class Player {
     public int getNumPoints() {
         return numPoints;
     }
+    
+    public String pointsToString(int numPoints) {
+        return "★".repeat(Math.max(0, numPoints));
+    }
 
     public void displayStatus() {
-        System.out.println(" | ----- " + name + " ----- ");
-        System.out.println(" | Points: " + numPoints);
-        if (isFrozen) {
-            System.out.println(" | *FROZEN*");
+        if (isHandicapped) {
+            System.out.println(" | ----/ ❄ " + name + " ❄ /---- ");
+        }
+        else {
+            System.out.println(" | ----- " + name + " ----- ");
+        }
+        System.out.println(" | Points: " + numPoints + " " + pointsToString(numPoints));
+        if (isHandicapped) {
+            System.out.println(" | ❄ FROZEN ❄ ");
         }
         System.out.println(" | Cards in hand:");
         for (int i = 0; i < hand.size(); i++) {
@@ -112,5 +86,22 @@ public class Player {
             System.out.println(hand.get(i));
         }
         System.out.println(" | ----- ----- ----- ");
+    }
+
+    public Player selectAnotherPlayer(ArrayList<Player> players) {
+
+        // pick a random player (but not oneself) to apply any additional actions to
+        boolean selectedAnotherPlayer = false;
+        Player otherPlayer = null;
+
+        while (!selectedAnotherPlayer) {
+            int randomPlayerIndex = Rand.randomInt(0, players.size());
+            otherPlayer = players.get(randomPlayerIndex);
+            if (otherPlayer != this) {
+                selectedAnotherPlayer = true;
+            }
+        }
+
+        return otherPlayer;
     }
 }

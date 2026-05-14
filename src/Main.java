@@ -10,6 +10,5 @@ public class Main {
         game.registerPlayer(p3);
 
         game.run();
-        //game.auto();
     }
 }

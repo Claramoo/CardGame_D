@@ -1,11 +1,11 @@
 import java.util.ArrayList;
 
-public class PointCard extends Card {
+public class CardGold extends Card {
 
-    public PointCard() {
+    public CardGold() {
         // Point card settings
-        int minPoints = 6;
-        int maxPoints = 10;
+        int minPoints = 3;
+        int maxPoints = 9;
 
         int pointValue = Rand.randomInt(minPoints, maxPoints + 1);
 
@@ -22,6 +22,6 @@ public class PointCard extends Card {
 
     @Override
     public String toString() {
-        return "Point Card { point value: " + super.getPointValue() + "}";
+        return "Gold Card {gold value: " + super.getPointValue() + "}";
     }
 }
