@@ -22,6 +22,6 @@ public class CardGold extends Card {
 
     @Override
     public String toString() {
-        return "Gold Card {gold value: " + super.getPointValue() + "}";
+        return "Gold Card {gold gained: " + super.getPointValue() + "}";
     }
 }

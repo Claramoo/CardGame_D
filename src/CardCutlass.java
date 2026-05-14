@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class CardCutlass extends Card implements LoseGold, HandicapPlayer {
+public class CardCutlass extends Card implements SkipsPlayerTurn {
 
     private final int damage;
 
@@ -37,7 +37,6 @@ public class CardCutlass extends Card implements LoseGold, HandicapPlayer {
         handicapPlayer(currentPlayer, otherPlayer);
     }
 
-    @Override
     public void loseGold(Player currentPlayer, Player playerToDamage) {
         playerToDamage.removePoints(damage);
         System.out.println("\n" + currentPlayer.getName() + " did " + damage + " damage to " + playerToDamage.getName() + ".");
@@ -46,7 +45,7 @@ public class CardCutlass extends Card implements LoseGold, HandicapPlayer {
 
     @Override
     public String toString() {
-        return "Cutlass Card {gold value: " + super.getPointValue() + ", gold stolen: " + damage + "}";
+        return "Cutlass Card {gold gained: " + super.getPointValue() + ", gold stolen: " + damage + "}";
     }
 
     @Override

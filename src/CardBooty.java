@@ -16,7 +16,7 @@ public class CardBooty extends Card {
 
     @Override
     public String toString() {
-        return "Booty Card {doubles player's gold amount}";
+        return "Booty Card {double player's gold count}";
     }
 
 }

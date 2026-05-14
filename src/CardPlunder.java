@@ -3,12 +3,15 @@ import java.util.ArrayList;
 public class CardPlunder extends Card {
 
     public CardPlunder() {
-        super(-4);
+        int min = 1;
+        int max = 3;
+
+        super(Rand.randomInt(min,max+1));
     }
 
     @Override
     public void play(Player currentPlayer, ArrayList<Player> allPlayers) {
-        currentPlayer.addPoints(super.getPointValue());
+        currentPlayer.addPoints(-super.getPointValue());
 
         System.out.println(currentPlayer.getName() + " played " + this);
         System.out.println(currentPlayer.getName() + " now has " + currentPlayer.getNumPoints() + " points.");
@@ -36,6 +39,6 @@ public class CardPlunder extends Card {
 
     @Override
     public String toString() {
-        return "Plunder Card {gold lost: -4, steals another player's card";
+        return "Plunder Card {gold lost: " + super.getPointValue() + ", steals another player's card";
     }
 }

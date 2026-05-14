@@ -1,13 +1,15 @@
 import java.util.ArrayList;
 
-public class CardRope extends Card implements HandicapPlayer {
+public class CardRope extends Card implements SkipsPlayerTurn {
 
     public CardRope() {
-        super(0);
+        super(1);
     }
 
     @Override
     public void play(Player currentPlayer, ArrayList<Player> allPlayers) {
+        currentPlayer.addPoints(super.getPointValue());
+        
         // choose a target player (and not the current player)
         if (allPlayers.size() < 2) {
             System.out.println("Error: No other players for the FreezeCard to freeze or damage.");
@@ -29,6 +31,6 @@ public class CardRope extends Card implements HandicapPlayer {
 
     @Override
     public String toString() {
-        return "Rope Card {skips another player's turn}";
+        return "Rope Card {gold gained: 1, skips another player's turn}";
     }
 }

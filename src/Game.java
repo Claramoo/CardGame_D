@@ -122,8 +122,8 @@ public class Game {
                 Player otherPlayer = currentPlayer.selectAnotherPlayer(players);
 
                 damageCard.loseGold(currentPlayer, otherPlayer);
-                if (damageCard instanceof HandicapPlayer) {
-                    HandicapPlayer HandicappedCard = (HandicapPlayer)damageCard;
+                if (damageCard instanceof SkipsPlayerTurn) {
+                    SkipsPlayerTurn HandicappedCard = (SkipsPlayerTurn)damageCard;
                     HandicappedCard.handicapPlayer(currentPlayer, otherPlayer);
                 }
             }
