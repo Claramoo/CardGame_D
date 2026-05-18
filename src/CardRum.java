@@ -12,8 +12,7 @@ public class CardRum extends Card {
 
         int goldValue = currentPlayer.getGoldAmount();
 
-        currentPlayer.loseGold(goldValue);
-        System.out.println(currentPlayer.getName() + " now has " + currentPlayer.getGoldAmount() + " gold.");
+
 
         if (allPlayers.size() < 2) {
             System.out.println("Error: No other player for Rum Card");
@@ -21,9 +20,13 @@ public class CardRum extends Card {
         }
 
         Player otherPlayer = currentPlayer.selectAnotherPlayer(allPlayers);
+        System.out.println(currentPlayer.getName() + " chose " + otherPlayer.getName() + "!");
+
+        currentPlayer.loseGold(goldValue);
+        System.out.println("\n" + currentPlayer.getName() + " now has " + currentPlayer.getGoldAmount() + " gold.");
 
         otherPlayer.addGold(goldValue);
-        System.out.println("\n" + otherPlayer.getName() + "now has " + otherPlayer.getGoldAmount() + " gold.");
+        System.out.println(otherPlayer.getName() + " now has " + otherPlayer.getGoldAmount() + " gold.");
     }
 
     @Override

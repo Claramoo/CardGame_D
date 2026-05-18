@@ -9,6 +9,8 @@ public class CardWind extends Card{
 
     @Override
     public void play(Player currentPlayer, ArrayList<Player> allPlayers) {
+        System.out.println(currentPlayer.getName() + " plays " + this);
+
         ArrayList<Card> allCards = new ArrayList<>();
         for (Player p : allPlayers) {
             while (p.hasCardsInHand()) {
@@ -22,6 +24,8 @@ public class CardWind extends Card{
                 p.addCardToHand(allCards.removeLast());
             }
         }
+
+        System.out.println("\nCards have been shuffled and distributed.");
     }
 
 

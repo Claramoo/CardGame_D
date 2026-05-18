@@ -16,15 +16,16 @@ public class CardPlunder extends Card {
         }
 
         Player otherPlayer = currentPlayer.selectAnotherPlayer(allPlayers);
+        System.out.println(currentPlayer.getName() + " chose " + otherPlayer.getName() + "!");
 
         if (!otherPlayer.hasCardsInHand()) {
-            System.out.println("Can't steal from " + otherPlayer.getName() + " because they have no cards!");
+            System.out.println("\nCan't steal from " + otherPlayer.getName() + " because they have no cards!");
             return;
         }
 
         Card stolenCard = otherPlayer.removeRandomCard();
         currentPlayer.addCardToHand(stolenCard);
-        System.out.println(currentPlayer.getName() + " steals " + stolenCard + " from " + otherPlayer.getName());
+        System.out.println("\n" + currentPlayer.getName() + " steals " + stolenCard + " from " + otherPlayer.getName());
 
     }
 

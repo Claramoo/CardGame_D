@@ -6,10 +6,10 @@ public class Player {
     private int goldAmount;
     private boolean isInjured;
 
-    public Player(String name) {
+    public Player(String name, int goldAmount) {
         this.name = name;
         hand = new ArrayList<Card>();
-        goldAmount = 5;
+        this.goldAmount = goldAmount;
         isInjured = false;
     }
 
@@ -81,7 +81,7 @@ public class Player {
         }
         System.out.println(" | Points: " + goldAmount + " " + goldToString(goldAmount));
         if (isInjured) {
-            System.out.println(" | ❄ FROZEN ❄ ");
+            System.out.println(" | X INJURED X ");
         }
         System.out.println(" | Cards in hand:");
         for (int i = 0; i < hand.size(); i++) {
@@ -106,6 +106,11 @@ public class Player {
         }
 
         return otherPlayer;
+    }
+
+    @Override
+    public String toString() {
+        return (this.getName() + " {has " + hand.size() + " cards in hand}");
     }
 
 }

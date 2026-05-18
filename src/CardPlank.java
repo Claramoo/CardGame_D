@@ -15,14 +15,15 @@ public class CardPlank extends Card {
             return;
         }
         Player otherPlayer = currentPlayer.selectAnotherPlayer(allPlayers);
+        System.out.println(currentPlayer.getName() + " chose " + otherPlayer.getName() + "!");
 
         int goldValue = otherPlayer.getGoldAmount();
 
         otherPlayer.loseGold(goldValue);
-        System.out.println(otherPlayer.getName() + "now has " + otherPlayer.getGoldAmount() + " gold.");
+        System.out.println("\n" + otherPlayer.getName() + " now has " + otherPlayer.getGoldAmount() + " gold.");
 
         currentPlayer.addGold(goldValue);
-        System.out.println("\n" + currentPlayer.getName() + " now has " + currentPlayer.getGoldAmount() + " gold.");
+        System.out.println(currentPlayer.getName() + " now has " + currentPlayer.getGoldAmount() + " gold.");
 
     }
 

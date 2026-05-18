@@ -16,11 +16,10 @@ public class CardDoubloons extends Card {
         }
 
         Player otherPlayer = currentPlayer.selectAnotherPlayer(allPlayers);
+        System.out.println(currentPlayer.getName() + " chose " + otherPlayer.getName() + "!");
 
         otherPlayer.addGold(super.getPointValue());
-
-        System.out.println(otherPlayer.getName() + " plays " + this);
-        System.out.println(otherPlayer.getName() + " now has " + otherPlayer.getGoldAmount() + " gold.");
+        System.out.println("\n" + otherPlayer.getName() + " now has " + otherPlayer.getGoldAmount() + " gold.");
     }
 
     @Override

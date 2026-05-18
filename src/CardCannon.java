@@ -16,11 +16,10 @@ public class CardCannon extends Card {
         }
 
         Player otherPlayer = currentPlayer.selectAnotherPlayer(allPlayers);
+        System.out.println(currentPlayer.getName() + " chose " + otherPlayer.getName() + "!");
 
         otherPlayer.loseGold(super.getPointValue());
-
-        System.out.println(otherPlayer.getName() + " plays " + this);
-        System.out.println(otherPlayer.getName() + " now has " + otherPlayer.getGoldAmount() + " gold.");
+        System.out.println("\n" + otherPlayer.getName() + " now has " + otherPlayer.getGoldAmount() + " gold.");
     }
 
     @Override

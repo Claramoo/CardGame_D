@@ -17,6 +17,7 @@ public class CardKnife extends Card implements InjurePlayer {
         }
 
         Player otherPlayer = currentPlayer.selectAnotherPlayer(allPlayers);
+        System.out.println(currentPlayer.getName() + " chose " + otherPlayer.getName() + "!");
 
         attackPlayer(currentPlayer, otherPlayer);
 
@@ -25,12 +26,12 @@ public class CardKnife extends Card implements InjurePlayer {
     @Override
     public void attackPlayer(Player currentPlayer, Player playerToAttack) {
         playerToAttack.injure();
-        System.out.println(currentPlayer.getName() + " attacks " + playerToAttack.getName() + "!");
+        System.out.println("\n" + currentPlayer.getName() + " attacks " + playerToAttack.getName() + "!");
     }
 
 
     @Override
     public String toString() {
-        return "Card Knife {injures another player}";
+        return "Knife Card {injures another player}";
     }
 }

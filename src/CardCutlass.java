@@ -17,11 +17,13 @@ public class CardCutlass extends Card implements InjurePlayer {
         }
 
         Player otherPlayer = currentPlayer.selectAnotherPlayer(allPlayers);
+        System.out.println(currentPlayer.getName() + " chose " + otherPlayer.getName() + "!");
+
+        attackPlayer(currentPlayer, otherPlayer);
 
         otherPlayer.loseGold(super.getPointValue());
         System.out.println(otherPlayer.getName() + " now has " + otherPlayer.getGoldAmount() + " gold.");
 
-        attackPlayer(currentPlayer, otherPlayer);
     }
 
     @Override
@@ -32,6 +34,6 @@ public class CardCutlass extends Card implements InjurePlayer {
     @Override
     public void attackPlayer(Player currentPlayer, Player playerToAttack) {
         playerToAttack.injure();
-        System.out.println(currentPlayer.getName() + " attacks " + playerToAttack.getName() + "!");
+        System.out.println("\n" + currentPlayer.getName() + " attacks " + playerToAttack.getName() + "!");
     }
 }
