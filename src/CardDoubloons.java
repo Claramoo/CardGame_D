@@ -1,8 +1,8 @@
 import java.util.ArrayList;
 
-public class CardCannon extends Card {
+public class CardDoubloons extends Card {
 
-    public CardCannon(int min, int max) {
+    public CardDoubloons(int min, int max) {
         super(Rand.randomInt(min, max+1));
     }
 
@@ -11,13 +11,13 @@ public class CardCannon extends Card {
         System.out.println(currentPlayer.getName() + " plays " + this);
 
         if (allPlayers.size() < 2) {
-            System.out.println("Error: No other players for Cannon Card.");
+            System.out.println("Error: No other players for Doubloons Card.");
             return;
         }
 
         Player otherPlayer = currentPlayer.selectAnotherPlayer(allPlayers);
 
-        otherPlayer.loseGold(super.getPointValue());
+        otherPlayer.addGold(super.getPointValue());
 
         System.out.println(otherPlayer.getName() + " plays " + this);
         System.out.println(otherPlayer.getName() + " now has " + otherPlayer.getGoldAmount() + " gold.");
@@ -25,6 +25,6 @@ public class CardCannon extends Card {
 
     @Override
     public String toString() {
-        return "Cannon Card {another player loses gold: " + super.getPointValue() + "}";
-    }
-}
+        return "Doubloons Card {another player gains gold: " + super.getPointValue() + "}";
+    }}
+

@@ -16,7 +16,7 @@ public class CardRum extends Card {
         System.out.println(currentPlayer.getName() + " now has " + currentPlayer.getGoldAmount() + " gold.");
 
         if (allPlayers.size() < 2) {
-            System.out.println("Error: No other player to give gold to!");
+            System.out.println("Error: No other player for Rum Card");
             return;
         }
 

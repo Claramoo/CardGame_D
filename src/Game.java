@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Game {
 
@@ -155,22 +156,20 @@ public class Game {
     // Populates the two ArrayLists with random Cards, according to the settings.
     private void generateDecks() {
         for (int i = 0; i < 3; i++) {
-
             mixedDeck.add(new CardBooty());
-            mixedDeck.add(new CardGold());
+            mixedDeck.add(new CardCannon(3,6));
+            mixedDeck.add(new CardCracken(4,7));
+            mixedDeck.add(new CardCutlass(1,9));
+            mixedDeck.add(new CardDoubloons(3,6));
+            mixedDeck.add(new CardGold(1,4));
+            mixedDeck.add(new CardKnife());
+            mixedDeck.add(new CardPlank());
             mixedDeck.add(new CardPlunder());
             mixedDeck.add(new CardRum());
-            mixedDeck.add(new CardTreasureMap());
+            mixedDeck.add(new CardTreasureMap(6,8));
+            mixedDeck.add(new CardWind());
         }
-        mixedDeck.add(new CardCutlass());
-        mixedDeck.add(new CardCracken());
-
-        for (int i=0; i<2;i++) {
-            skipDeck.add(new CardCracken());
-            skipDeck.add(new CardCutlass());
-            skipDeck.add(new CardKnife());
-        }
-
+        Collections.shuffle(mixedDeck);
     }
 
     private void declareWinner() {

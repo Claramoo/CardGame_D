@@ -3,8 +3,8 @@ import java.util.Collections;
 
 public class CardWind extends Card{
 
-    public CardWind(int pointValue) {
-        super(pointValue);
+    public CardWind() {
+        super(0);
     }
 
     @Override
