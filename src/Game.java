@@ -27,7 +27,7 @@ public class Game {
         players.add(new Player("Aang", startingGoldAmount));
         players.add(new Player("SpongeBob", startingGoldAmount));
         players.add(new Player("Michelangelo", startingGoldAmount));
-        //players.add(new Player("Clare", startingGoldAmount));
+        //players.add(new Player("Damien", startingGoldAmount));
     }
 
 
