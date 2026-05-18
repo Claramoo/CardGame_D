@@ -3,20 +3,19 @@ import java.util.ArrayList;
 public class Player {
     private final String name;
     private ArrayList<Card> hand;
-    private int numPoints;
-    private boolean isHandicapped;
+    private int goldAmount;
+    private boolean isInjured;
 
     public Player(String name) {
         this.name = name;
         hand = new ArrayList<Card>();
-        numPoints = 5;
-        isHandicapped = false;
+        goldAmount = 5;
+        isInjured = false;
     }
 
     public void playRandomCardFromHand(ArrayList<Player> players) {
         // select a random card from our hand to play
-        int randomCardIndex = Rand.randomInt(0, hand.size());
-        Card randomCard = hand.remove(randomCardIndex);
+        Card randomCard = hand.remove(Rand.randomInt(0, hand.size()));
         randomCard.play(this, players);
     }
 
@@ -28,56 +27,60 @@ public class Player {
         hand.add(card);
     }
 
-    public boolean isHandicapped() {
-        return isHandicapped;
+    public boolean isInjured() {
+        return isInjured;
     }
 
-    public void freeze() {
-        isHandicapped = true;
+    public void injure() {
+        isInjured = true;
     }
 
-    public void unfreeze() {
-        isHandicapped = false;
+    public void healFromInjury() {
+        isInjured = false;
     }
 
     public Card removeRandomCard() {
         if (hand.isEmpty()) {
             return null; // returning null indicates there are no cards to remove
         }
-
-        int randomCardIndex = Rand.randomInt(0, hand.size());
-        return hand.remove(randomCardIndex); // ArrayList.remove both removes AND returns a reference to the object
+        return hand.remove(Rand.randomInt(0, hand.size())); // ArrayList.remove both removes AND returns a reference to the object
     }
 
     public String getName() {
         return name;
     }
 
-    public void addPoints(int pointsToAdd) {
-        numPoints += pointsToAdd;
+    public void addGold(int goldToAdd) {
+        goldAmount = (goldAmount + goldToAdd) % 10;
+        if (goldAmount < 0) {
+            goldAmount += 10;
+        }
     }
 
-    public void removePoints(int pointsToRemove) {
-        addPoints(-pointsToRemove);
+    public void loseGold(int goldToLose) {
+        goldAmount = (goldAmount - goldToLose) % 10;
+        if (goldAmount < 0) {
+            goldAmount += 10;
+        }
     }
 
-    public int getNumPoints() {
-        return numPoints;
+    public int getGoldAmount() {
+        return goldAmount;
     }
     
-    public String pointsToString(int numPoints) {
+    public String goldToString(int numPoints) {
         return "★".repeat(Math.max(0, numPoints));
     }
 
     public void displayStatus() {
-        if (isHandicapped) {
+        if (isInjured) {
             System.out.println(" | ----/ ❄ " + name + " ❄ /---- ");
         }
         else {
             System.out.println(" | ----- " + name + " ----- ");
         }
-        System.out.println(" | Points: " + numPoints + " " + pointsToString(numPoints));
-        if (isHandicapped) {
+        System.out.println(" | Points: " + goldAmount + " " + goldToString(goldAmount));
+        if (isInjured) {
             System.out.println(" | ❄ FROZEN ❄ ");
         }
         System.out.println(" | Cards in hand:");
@@ -104,4 +107,5 @@ public class Player {
 
         return otherPlayer;
     }
+
 }

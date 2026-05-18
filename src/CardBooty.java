@@ -8,15 +8,15 @@ public class CardBooty extends Card {
 
     @Override
     public void play(Player currentPlayer, ArrayList<Player> allPlayers) {
-        currentPlayer.addPoints(currentPlayer.getNumPoints());
+        currentPlayer.addGold(currentPlayer.getGoldAmount());
 
-        System.out.println(currentPlayer.getName() + " played " + this);
-        System.out.println(currentPlayer.getName() + " now has " + currentPlayer.getNumPoints() + " points.");
+        System.out.println(currentPlayer.getName() + " plays " + this);
+        System.out.println(currentPlayer.getName() + " now has " + currentPlayer.getGoldAmount() + " gold.");
     }
 
     @Override
     public String toString() {
-        return "Booty Card {double player's gold count}";
+        return "Booty Card {double player's gold}";
     }
 
 }

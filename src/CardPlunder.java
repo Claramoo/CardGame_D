@@ -3,42 +3,33 @@ import java.util.ArrayList;
 public class CardPlunder extends Card {
 
     public CardPlunder() {
-        int min = 1;
-        int max = 3;
-
-        super(Rand.randomInt(min,max+1));
+        super(0);
     }
 
     @Override
     public void play(Player currentPlayer, ArrayList<Player> allPlayers) {
-        currentPlayer.addPoints(-super.getPointValue());
+        System.out.println(currentPlayer.getName() + " plays " + this);
 
-        System.out.println(currentPlayer.getName() + " played " + this);
-        System.out.println(currentPlayer.getName() + " now has " + currentPlayer.getNumPoints() + " points.");
-
-        // 1. choose a target player (and not oneself)
         if (allPlayers.size() < 2) {
-            System.out.println("Error: No other players for the ThiefCard to steal from.");
+            System.out.println("Error: No other players for the AttackCard to damage.");
             return;
         }
 
         Player otherPlayer = currentPlayer.selectAnotherPlayer(allPlayers);
 
-        // 2. remove a random card from that player
-        Card removedCard = otherPlayer.removeRandomCard();
-        if (removedCard == null) {
-            System.out.println("Cannot steal from " + otherPlayer.getName() + " because they have no cards!");
+        if (!otherPlayer.hasCardsInHand()) {
+            System.out.println("Can't steal from " + otherPlayer.getName() + " because they have no cards!");
+            return;
         }
 
-        // 3. add the removed card to the current player
-        else {
-            currentPlayer.addCardToHand(removedCard);
-            System.out.println(currentPlayer.getName() + " stole " + removedCard + " from " + otherPlayer.getName() + ".");
-        }
+        Card stolenCard = otherPlayer.removeRandomCard();
+        currentPlayer.addCardToHand(stolenCard);
+        System.out.println(currentPlayer.getName() + " steals " + stolenCard + " from " + otherPlayer.getName());
+
     }
 
     @Override
     public String toString() {
-        return "Plunder Card {gold lost: " + super.getPointValue() + ", steals another player's card";
+        return "Plunder Card {steal another player's card}";
     }
 }

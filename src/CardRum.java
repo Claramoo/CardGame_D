@@ -8,8 +8,12 @@ public class CardRum extends Card {
 
     @Override
     public void play(Player currentPlayer, ArrayList<Player> allPlayers) {
-        int pointValue = currentPlayer.getNumPoints();
-        currentPlayer.addPoints(-currentPlayer.getNumPoints());
+        System.out.println(currentPlayer.getName() + " plays " + this);
+
+        int goldValue = currentPlayer.getGoldAmount();
+
+        currentPlayer.loseGold(goldValue);
+        System.out.println(currentPlayer.getName() + " now has " + currentPlayer.getGoldAmount() + " gold.");
 
         if (allPlayers.size() < 2) {
             System.out.println("Error: No other player to give gold to!");
@@ -18,11 +22,8 @@ public class CardRum extends Card {
 
         Player otherPlayer = currentPlayer.selectAnotherPlayer(allPlayers);
 
-        otherPlayer.addPoints(pointValue);
-
-        System.out.println(currentPlayer.getName() + " played " + this);
-        System.out.println(currentPlayer.getName() + " gave all of their gold to " + otherPlayer.getName() + "!");
-        System.out.println(otherPlayer.getName() + "now has " + otherPlayer.getNumPoints() + " gold.");
+        otherPlayer.addGold(goldValue);
+        System.out.println("\n" + otherPlayer.getName() + "now has " + otherPlayer.getGoldAmount() + " gold.");
     }
 
     @Override

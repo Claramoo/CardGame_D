@@ -15,7 +15,7 @@ public class Game {
     private int totalNumberOfCards;
     private float pointCardChances; // % chance (from 0-1) of generating a point card
     private float attackCardChances; // % chance (from 0-1) of generating an attack card
-    private float freezeCardChances; // % chance (from 0-1) of generating a freeze card
+    private float freezeCardChances; // % chance (from 0-1) of generating a injure card
     //private float thiefCardChances; // thief card chances are the leftovers of the other chances
 
     private float chancesOfDamageCardBeingInDamageDeck; // % chance of a generated damage card being added to the damage-only deck
@@ -27,7 +27,6 @@ public class Game {
 
     private ArrayList<Player> players;
     private ArrayList<Card> mixedDeck; // contains a mix of all types of cards
-    private ArrayList<LoseGold> damageDeck; // contains only cards that implement DealsDamage
 
     // ------ End of Game Objects ----- //
 
@@ -40,7 +39,6 @@ public class Game {
         // Game objects
         players = new ArrayList<>();
         mixedDeck = new ArrayList<>();
-        damageDeck = new ArrayList<>();
 
         // Generate the decks
         generateDecks();
@@ -69,7 +67,7 @@ public class Game {
 
         // game loop -- loop as long as either deck has cards
 
-        while (!mixedDeck.isEmpty() || !damageDeck.isEmpty()) {
+        while (!mixedDeck.isEmpty()) {
 
             // switch to next player
             currentPlayerIndex += 1;
@@ -79,7 +77,6 @@ public class Game {
             currentPlayer = players.get(currentPlayerIndex);
 
             System.out.println("\n# cards remaining in Mixed deck: " + mixedDeck.size() + ".");
-            System.out.println("# cards remaining in Damage deck: " + damageDeck.size() + ".\n");
 
             System.out.println("It's " + currentPlayer.getName() + "'s turn.\n");
             currentPlayer.displayStatus();
@@ -87,9 +84,9 @@ public class Game {
             System.out.println();
 
             // check if the player should be skipped
-            if (currentPlayer.isHandicapped()) {
+            if (currentPlayer.isInjured()) {
                 System.out.println(currentPlayer.getName() + " is frozen! Skipping turn.");
-                currentPlayer.unfreeze();
+                currentPlayer.healFromInjury();
                 System.out.println("\n" + "----- ----- ----- ----- ----- ----- ----- -----");
                 continue; // skips the rest of the body of the loop, and returns to the start of the loop
             }
@@ -103,29 +100,12 @@ public class Game {
             }
 
             // 2. OR draw a card from mixed deck (but don't play it yet)
-            else if (damageDeck.isEmpty() || (!mixedDeck.isEmpty() && randomValue < playerChancesOfPlayingCard + playerChancesOfDrawingFromMixedDeck)) {
+            else if (!mixedDeck.isEmpty()) {
                 Object drawnObject = drawRandomCard(mixedDeck);
                 Card drawnCard = (Card)drawnObject;
                 currentPlayer.addCardToHand(drawnCard);
 
                 System.out.println(currentPlayer.getName() + " drew a " + drawnCard + " from the Mixed deck.");
-            }
-
-            // 3. OR draw a card from damage deck and use its damage effect immediately, without getting points
-            else {
-                Object drawnObject = drawRandomCard(damageDeck);
-                LoseGold damageCard = (LoseGold)drawnObject;
-
-                System.out.println(currentPlayer.getName() + " drew a " + damageCard + " from the Damage deck.");
-
-                // pick a random player (but not oneself) to apply the damage card to
-                Player otherPlayer = currentPlayer.selectAnotherPlayer(players);
-
-                damageCard.loseGold(currentPlayer, otherPlayer);
-                if (damageCard instanceof SkipsPlayerTurn) {
-                    SkipsPlayerTurn HandicappedCard = (SkipsPlayerTurn)damageCard;
-                    HandicappedCard.handicapPlayer(currentPlayer, otherPlayer);
-                }
             }
 
             Input.waitForUserToPressEnter("\nPress Enter to end " + currentPlayer.getName() + "'s turn.");
@@ -158,7 +138,7 @@ public class Game {
 
 
         // Deck settings
-        totalNumberOfCards = 20;
+        //totalNumberOfCards = 20;
         chancesOfDamageCardBeingInDamageDeck = 0.4f;
 
         pointCardChances = 0.5f; // must be between 0 and 1
@@ -174,31 +154,23 @@ public class Game {
 
     // Populates the two ArrayLists with random Cards, according to the settings.
     private void generateDecks() {
-        for (int i = 0; i < totalNumberOfCards; i++) {
+        for (int i = 0; i < 3; i++) {
 
-            float randomValue = Rand.random(); // 0.0 -> 0.999...
-
-            // % chance of creating a point card
-            if (randomValue < pointCardChances) {
-                mixedDeck.add(new CardGold());
-            }
-
-            // % chance of creating an attack card
-            else if (randomValue < pointCardChances + attackCardChances) {
-                CardCutlass newCutlassCard = new CardCutlass();
-
-                if (Rand.random() < chancesOfDamageCardBeingInDamageDeck) {
-                    damageDeck.add(newCutlassCard);
-                } else {
-                    mixedDeck.add(newCutlassCard);
-                }
-            }
-
-            // % chance of creating a thief card
-            else {
-                mixedDeck.add(new CardPlunder());
-            }
+            mixedDeck.add(new CardBooty());
+            mixedDeck.add(new CardGold());
+            mixedDeck.add(new CardPlunder());
+            mixedDeck.add(new CardRum());
+            mixedDeck.add(new CardTreasureMap());
         }
+        mixedDeck.add(new CardCutlass());
+        mixedDeck.add(new CardCracken());
+
+        for (int i=0; i<2;i++) {
+            skipDeck.add(new CardCracken());
+            skipDeck.add(new CardCutlass());
+            skipDeck.add(new CardKnife());
+        }
+
     }
 
     private void declareWinner() {
@@ -207,11 +179,11 @@ public class Game {
 
         System.out.println("\nFinal Scoreboard:");
         for (Player p : players) {
-            System.out.println(p.getName() + ": " + p.getNumPoints());
+            System.out.println(p.getName() + ": " + p.getGoldAmount());
 
             // update the highest score tracker
-            if (p.getNumPoints() >= highestScore) {
-                highestScore = p.getNumPoints();
+            if (p.getGoldAmount() >= highestScore) {
+                highestScore = p.getGoldAmount();
                 playerWithHighestScore = p;
             }
         }

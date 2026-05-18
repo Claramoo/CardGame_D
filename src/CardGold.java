@@ -2,26 +2,20 @@ import java.util.ArrayList;
 
 public class CardGold extends Card {
 
-    public CardGold() {
-        // Point card settings
-        int minPoints = 3;
-        int maxPoints = 9;
-
-        int pointValue = Rand.randomInt(minPoints, maxPoints + 1);
-
-        super(pointValue);
+    public CardGold(int min, int max) {
+        super(Rand.randomInt(min, max+1));
     }
 
     @Override
     public void play(Player currentPlayer, ArrayList<Player> allPlayers) {
-        currentPlayer.addPoints(super.getPointValue());
+        currentPlayer.addGold(super.getPointValue());
 
-        System.out.println(currentPlayer.getName() + " played " + this);
-        System.out.println(currentPlayer.getName() + " now has " + currentPlayer.getNumPoints() + " points.");
+        System.out.println(currentPlayer.getName() + " plays " + this);
+        System.out.println(currentPlayer.getName() + " now has " + currentPlayer.getGoldAmount() + " gold.");
     }
 
     @Override
     public String toString() {
-        return "Gold Card {gold gained: " + super.getPointValue() + "}";
+        return "Gold Card {gain gold: " + super.getPointValue() + "}";
     }
 }

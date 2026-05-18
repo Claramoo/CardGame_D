@@ -1,28 +1,26 @@
 import java.util.ArrayList;
 
-public class CardCracken extends Card{
+public class CardCracken extends Card {
 
-    public CardCracken() {
-        int min = 3;
-        int max = 5;
-
+    public CardCracken(int min, int max) {
         super(Rand.randomInt(min, max+1));
     }
 
     @Override
     public void play(Player currentPlayer, ArrayList<Player> allPlayers) {
-        System.out.println(currentPlayer.getName() + " played " + this);
+        System.out.println(currentPlayer.getName() + " plays " + this);
 
         for (Player p : allPlayers) {
-            p.addPoints(-super.getPointValue());
+            p.loseGold(super.getPointValue());
 
-            System.out.println(p.getName() + " now has " + p.getNumPoints() + " gold.");
+            System.out.println(p.getName() + " now has " + p.getGoldAmount() + " gold.");
         }
+
     }
 
     @Override
     public String toString() {
-        return "Cracken Card {all players lose " + super.getPointValue() + " gold}";
+        return "Cracken Card {all players lose gold: " + super.getPointValue() + "}";
     }
 
 }
