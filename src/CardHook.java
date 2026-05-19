@@ -1,8 +1,8 @@
 import java.util.ArrayList;
 
-public class CardKnife extends Card implements InjurePlayer {
+public class CardHook extends Card implements InjurePlayer {
 
-    public CardKnife() {
+    public CardHook() {
         super(0);
     }
 
@@ -12,7 +12,7 @@ public class CardKnife extends Card implements InjurePlayer {
         
         // choose a target player (and not the current player)
         if (allPlayers.size() < 2) {
-            System.out.println("Error: No other players for Knife Card.");
+            System.out.println("Error: No other players for Hook Card.");
             return;
         }
 
@@ -32,6 +32,6 @@ public class CardKnife extends Card implements InjurePlayer {
 
     @Override
     public String toString() {
-        return "Knife Card {injures another player}";
+        return "Hook Card {injures another player}";
     }
 }

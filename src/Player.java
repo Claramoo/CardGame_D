@@ -2,20 +2,28 @@ import java.util.ArrayList;
 
 public class Player {
     private final String name;
-    private ArrayList<Card> hand;
     private int goldAmount;
-    private boolean isInjured;
+    private boolean playable;
+    private boolean isInjured  = false;
+    private ArrayList<Card> hand = new ArrayList<>();
 
-    public Player(String name, int goldAmount) {
+    public Player(String name, boolean playable, int goldAmount) {
         this.name = name;
-        hand = new ArrayList<Card>();
         this.goldAmount = goldAmount;
-        isInjured = false;
+        this.playable = playable;
     }
 
-    public void playRandomCardFromHand(ArrayList<Player> players) {
-        // select a random card from our hand to play
-        Card randomCard = hand.remove(Rand.randomInt(0, hand.size()));
+    public void playCardFromHand(ArrayList<Player> players) {
+        int index;
+        if (playable) {
+            do {
+                index = Input.getUserInt("Which Card to play? (1-" + hand.size() + ")\n>") - 1;
+            } while (index < 0 || index >= hand.size());
+        }
+        else {
+            index = Rand.randomInt(0, hand.size());
+        }
+        Card randomCard = hand.remove(index);
         randomCard.play(this, players);
     }
 
@@ -39,11 +47,15 @@ public class Player {
         isInjured = false;
     }
 
-    public Card removeRandomCard() {
+    public boolean isPlayable() {
+        return playable;
+    }
+
+    public Card removeCard(int index) {
         if (hand.isEmpty()) {
             return null; // returning null indicates there are no cards to remove
         }
-        return hand.remove(Rand.randomInt(0, hand.size())); // ArrayList.remove both removes AND returns a reference to the object
+        return hand.remove(index); // ArrayList.remove both removes AND returns a reference to the object
     }
 
     public String getName() {
@@ -68,8 +80,12 @@ public class Player {
         return goldAmount;
     }
     
-    public String goldToString(int numPoints) {
-        return "★".repeat(Math.max(0, numPoints));
+    public String goldToString() {
+        return "★".repeat(Math.max(0, goldAmount));
+    }
+
+    public int handSize() {
+        return hand.size();
     }
 
     public void displayStatus() {
@@ -79,7 +95,7 @@ public class Player {
         else {
             System.out.println(" | ----- " + name + " ----- ");
         }
-        System.out.println(" | Points: " + goldAmount + " " + goldToString(goldAmount));
+        System.out.println(" | Gold: " + goldAmount + " " + goldToString());
         if (isInjured) {
             System.out.println(" | X INJURED X ");
         }
@@ -94,23 +110,33 @@ public class Player {
     public Player selectAnotherPlayer(ArrayList<Player> players) {
 
         // pick a random player (but not oneself) to apply any additional actions to
-        boolean selectedAnotherPlayer = false;
-        Player otherPlayer = null;
+        Player otherPlayer;
 
-        while (!selectedAnotherPlayer) {
-            int randomPlayerIndex = Rand.randomInt(0, players.size());
-            otherPlayer = players.get(randomPlayerIndex);
-            if (otherPlayer != this) {
-                selectedAnotherPlayer = true;
+        if (playable) {
+            int index;
+            ArrayList<Player> otherPlayers = (ArrayList<Player>) players.clone();
+            otherPlayers.remove(this);
+            for (int i=0;i < otherPlayers.size();i++) {
+                System.out.println((i+1) + ".) " + otherPlayers.get(i));
             }
-        }
 
+            do {
+                index = Input.getUserInt("Choose a player!\n>") - 1;
+            } while (index < 0 || index >= otherPlayers.size());
+            otherPlayer = otherPlayers.get(index);
+        }
+        else {
+            do {
+                otherPlayer = players.get(Rand.randomInt(0, players.size()));
+            } while (otherPlayer == this);
+        }
         return otherPlayer;
     }
 
     @Override
     public String toString() {
-        return (this.getName() + " {has " + hand.size() + " cards in hand}");
+        return (this.getName() + " {" + hand.size() +
+                " cards in hand, Gold: " + goldAmount + " " + goldToString() + "}");
     }
 
 }

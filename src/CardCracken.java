@@ -8,7 +8,7 @@ public class CardCracken extends Card {
 
     @Override
     public void play(Player currentPlayer, ArrayList<Player> allPlayers) {
-        System.out.println(currentPlayer.getName() + " plays " + this);
+        System.out.println(currentPlayer.getName() + " plays " + this + "\n");
 
         for (Player p : allPlayers) {
             p.loseGold(super.getPointValue());

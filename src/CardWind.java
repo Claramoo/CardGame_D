@@ -14,12 +14,13 @@ public class CardWind extends Card{
         ArrayList<Card> allCards = new ArrayList<>();
         for (Player p : allPlayers) {
             while (p.hasCardsInHand()) {
-                allCards.add(p.removeRandomCard());
+                allCards.add(p.removeCard(p.handSize() - 1));
             }
         }
         Collections.shuffle(allCards);
 
-        for (int i=0;i < allCards.size()/allPlayers.size();i++) {
+        int floorDivision = allCards.size() / allPlayers.size();
+        for (int i=0;i < floorDivision;i++) {
             for (Player p : allPlayers) {
                 p.addCardToHand(allCards.removeLast());
             }

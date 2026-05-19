@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Random;
 
 public class CardPlunder extends Card {
 
@@ -22,11 +23,25 @@ public class CardPlunder extends Card {
             System.out.println("\nCan't steal from " + otherPlayer.getName() + " because they have no cards!");
             return;
         }
+        Card stolenCard;
 
-        Card stolenCard = otherPlayer.removeRandomCard();
+        if (currentPlayer.isPlayable()) {
+            System.out.println();
+            otherPlayer.displayStatus();
+
+            int index;
+            do {
+                index = Input.getUserInt(">") - 1;
+            } while (index < 0 || index >= otherPlayer.handSize());
+            stolenCard = otherPlayer.removeCard(index);
+
+        }
+        else {
+            stolenCard = otherPlayer.removeCard(Rand.randomInt(0, otherPlayer.handSize()));
+        }
+
         currentPlayer.addCardToHand(stolenCard);
         System.out.println("\n" + currentPlayer.getName() + " steals " + stolenCard + " from " + otherPlayer.getName());
-
     }
 
     @Override
