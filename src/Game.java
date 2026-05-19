@@ -5,13 +5,13 @@ public class Game {
 
     // ----------- Settings ----------- //
     private final int startingGoldAmount = 0;
-    private final int startingHandSize = 5;
+    private final int startingHandSize = 3;
     private final float playerChancesOfDrawingCard = 0.4f; // % chance (0-1) that a player plays a card from their hand
     // -------- End of Settings ------- //
 
 
     // --------- Game Objects --------- //
-    private ArrayList<Player> players = new ArrayList<>();
+    private ArrayList<Player> players = new ArrayList<>(50);
     private ArrayList<Card> deck = new ArrayList<>();
     // ------ End of Game Objects ----- //
 
@@ -23,7 +23,7 @@ public class Game {
 
 
     private void registerPlayers() {
-        players.add(new Player("Aang", true, startingGoldAmount));
+        players.add(new Player("Aang", false, startingGoldAmount));
         players.add(new Player("SpongeBob", false, startingGoldAmount));
         players.add(new Player("Michelangelo", false, startingGoldAmount));
         players.add(new Player("Damien", false, startingGoldAmount));
@@ -171,7 +171,7 @@ public class Game {
         int highestGold = 0;
         ArrayList<Player> winners = new ArrayList<>();
 
-        System.out.println("\nFinal Scoreboard:");
+        System.out.println("\nFinal Gold Count:");
         for (Player p : players) {
             System.out.println(p.getName() + ": " + p.getGoldAmount());
 
@@ -188,7 +188,7 @@ public class Game {
 
         System.out.println();
         if (winners.size() == 1) {
-            System.out.println("Player " + winners.getFirst().getName() + " wins!");
+            System.out.println(winners.getFirst().getName() + " wins!");
         }
         else {
             for (int i=0; i <winners.size()-1;i++) {

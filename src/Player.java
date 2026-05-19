@@ -101,8 +101,7 @@ public class Player {
         }
         System.out.println(" | Cards in hand:");
         for (int i = 0; i < hand.size(); i++) {
-            System.out.print(" | " + (i+1) + ": ");
-            System.out.println(hand.get(i));
+            System.out.println(" | " + (i+1) + ": " + hand.get(i));
         }
         System.out.println(" | ----- ----- ----- ");
     }
@@ -114,7 +113,7 @@ public class Player {
 
         if (playable) {
             int index;
-            ArrayList<Player> otherPlayers = (ArrayList<Player>) players.clone();
+            ArrayList<Player> otherPlayers = new ArrayList<>(players);
             otherPlayers.remove(this);
             for (int i=0;i < otherPlayers.size();i++) {
                 System.out.println((i+1) + ".) " + otherPlayers.get(i));

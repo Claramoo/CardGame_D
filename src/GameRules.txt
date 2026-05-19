@@ -1,3 +1,35 @@
+Fool's Gold
+
+Rules:
+- The goal of the game is to be the player with the most gold when the game ends
+- The game ends when the deck runs out of cards and at least one player doesn't have any more cards
+- Each player's gold amount can only be a number between 0-9
+- When players gain or lose gold, the gold amount wraps around the edges like pacman (goldAmount = goldAmount mod 10)
+- When a player gets injured (in game), their next turn is skipped
+- Each player can play a card from their hand or draw a card from the deck
+
+Start:
+- Each player starts with 5 cards
+- Each player starts with 0 gold
+
+Cards:
+- Gold Card {gain gold: (1-4)}
+- Booty Card {double player's gold}
+- Doubloons Card {another player gains gold: (3-6)}
+- Cannon Card {another player loses gold: (3-6)}
+- Treasure Map Card {all players gain gold: (6-8)}
+- Cracken Card {all players lose gold: (4-7)}
+- Rum Card {gives all your gold to another player}
+- Plank Card {another player gives all their gold to you}
+- Cutlass Card {another player loses gold: (1-9), injures another player}
+- Plunder Card {steal another player's card}
+- Wind Card {shuffles all player's cards and distributes evenly, remaining cards get discarded}
+
+
+
+
+
+
 The goal of the game is to be the Player with the most points when the game ends.
 Each player starts with 5 points. Points can increase and decrease as the game progresses, but cannot be negative.
 The game ends when there are no cards remaining in any draw piles.
