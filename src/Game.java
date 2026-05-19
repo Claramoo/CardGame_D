@@ -5,8 +5,8 @@ public class Game {
 
     // ----------- Settings ----------- //
     private final int startingGoldAmount = 0;
-    private final int startingHandSize = 3;
-    private final float playerChancesOfDrawingCard = 0.4f; // % chance (0-1) that a player plays a card from their hand
+    private final int startingHandSize = 5;
+    private final float playerChancesOfDrawingCard = 0.35f; // % chance (0-1) that a player plays a card from their hand
     // -------- End of Settings ------- //
 
 
@@ -71,7 +71,7 @@ public class Game {
         Player currentPlayer;
 
         // game loop - game ends when the deck is empty and one of the players have no cards left
-        while (!deck.isEmpty() || playersHaveHand()) {
+        while (!deck.isEmpty() || allPlayerHaveHand()) {
 
             // switch to next player
             currentPlayerIndex += 1;
@@ -103,6 +103,7 @@ public class Game {
                 continue; // skips the rest of the body of the loop, and returns to the start of the loop
             }
 
+            // Current player plays
             if (currentPlayer.isPlayable()) {
                 playerDecision(currentPlayer);
             }
@@ -110,6 +111,7 @@ public class Game {
                 botDecisions(currentPlayer);
             }
 
+            // waits
             Input.waitForUserToPressEnter("\nPress Enter to end " + currentPlayer.getName() + "'s turn.");
             System.out.println("\n" + "----- ----- ----- ----- ----- ----- ----- -----");
         }
@@ -120,15 +122,19 @@ public class Game {
 
 
     private void playerDecision(Player currentPlayer) {
+        // Play a card in hand or draw a card from the deck
         int index;
         do {
             index = Input.getUserInt("1.) Play a card in hand\n2.) Draw a card from the deck\n>");
         } while (index > 2 || index < 1 ||
                 (index == 1 && !currentPlayer.hasCardsInHand()) || (index == 2 && deck.isEmpty()));
 
+        // if play card
         if (index == 1) {
             currentPlayer.playCardFromHand(players);
         }
+
+        // if draw card
         else {
             Card drawnCard = deck.removeLast();
             currentPlayer.addCardToHand(drawnCard);
@@ -157,7 +163,7 @@ public class Game {
     }
 
 
-    public boolean playersHaveHand() {
+    public boolean allPlayerHaveHand() {
         for (Player p : players) {
             if (!p.hasCardsInHand()) {
                 return false;
@@ -186,10 +192,13 @@ public class Game {
             }
         }
 
+        // prints winner
         System.out.println();
         if (winners.size() == 1) {
             System.out.println(winners.getFirst().getName() + " wins!");
         }
+
+        // prints players who tied
         else {
             for (int i=0; i <winners.size()-1;i++) {
                 System.out.print(winners.get(i).getName() + ", ");

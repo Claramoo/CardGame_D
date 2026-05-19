@@ -22,5 +22,4 @@ public class CardCracken extends Card {
     public String toString() {
         return "Cracken Card {all players lose gold: " + super.getPointValue() + "}";
     }
-
 }

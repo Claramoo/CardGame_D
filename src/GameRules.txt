@@ -18,10 +18,11 @@ Cards:
 - Doubloons Card {another player gains gold: (3-6)}
 - Cannon Card {another player loses gold: (3-6)}
 - Treasure Map Card {all players gain gold: (6-8)}
-- Cracken Card {all players lose gold: (4-7)}
+- Cracken Card {all players lose gold: (4-7), injures random player}
 - Rum Card {gives all your gold to another player}
 - Plank Card {another player gives all their gold to you}
 - Cutlass Card {another player loses gold: (1-9), injures another player}
+- Hook Card {injures another player}
 - Plunder Card {steal another player's card}
 - Wind Card {shuffles all player's cards and distributes evenly, remaining cards get discarded}
 
